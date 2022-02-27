@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-
+//
 import { auth } from "../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-export const useSignup = () => {
+export default function useLogin() {
   const [error, setError] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = (email, password) => {
+  const login = (email, password) => {
     setError(null);
-    createUserWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((response) => {
         dispatch({ type: "LOGIN", payload: response.user });
       })
@@ -18,5 +18,6 @@ export const useSignup = () => {
         setError(err.message);
       });
   };
-  return { error, signup };
-};
+
+  return { error, login };
+}

@@ -14,12 +14,8 @@ export default function RecipeList({ recipes }) {
   return (
     <div className="recipe-list">
       {recipes.map((recipe) => (
-        <div
-          onClick={() => handleClick(recipe.id)}
-          key={recipe.id}
-          className="card"
-        >
-          <h3>{recipe.title}</h3>
+        <div key={recipe.id} className="card">
+          <h3 onClick={() => handleClick(recipe.id)}>{recipe.title}</h3>
           <p>{recipe.cookingTime} to make.</p>
           <div>{recipe.method}...</div>
           <Link to={`/recipes/${recipe.id}`}>Cook This</Link>

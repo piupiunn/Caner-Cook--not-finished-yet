@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { db } from "../../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // styles
 import "./Create.css";
@@ -13,6 +14,7 @@ export default function Create() {
   const [newIngredient, setNewIngredient] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const ingredientInput = useRef(null);
+  const { user } = useAuthContext();
 
   const navigate = useNavigate();
 
@@ -25,6 +27,7 @@ export default function Create() {
       cookingTime,
       newIngredient,
       ingredients,
+      uid: user.uid,
     });
   };
 
