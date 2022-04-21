@@ -1,36 +1,28 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom'
+import { useFetch } from '../../hooks/useFetch'
 
 // styles
-import "./Recipe.css";
+import './Recipe.css'
 
 export default function Recipe() {
-  const { id } = useParams();
-
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState(null);
-  const [recipe, setRecipe] = useState(null);
-
-  useEffect(() => {
-    setIsPending(true);
-  }, [id]);
+  const { id } = useParams()
+  const url = 'http://localhost:3000/recipes/' + id
+  const { error, isPending, data: recipe } = useFetch(url)
 
   return (
-    <div>
+    <div className="recipe">
       {error && <p className="error">{error}</p>}
-      {isPending && <p className="loading">Loadinggg...</p>}
+      {isPending && <p className="loading">Loading...</p>}
       {recipe && (
         <>
           <h2 className="page-title">{recipe.title}</h2>
           <p>Takes {recipe.cookingTime} to cook.</p>
           <ul>
-            {recipe.ingredients.map((ing) => (
-              <li key={ing}>ing</li>
-            ))}
+            {recipe.ingredients.map(ing => <li key={ing}>ing</li>)}
           </ul>
           <p className="method">{recipe.method}</p>
         </>
       )}
     </div>
-  );
+  )
 }

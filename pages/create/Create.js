@@ -1,8 +1,6 @@
-import { useState, useRef } from "react";
-import { db } from "../../firebase/config";
-import { collection, addDoc } from "firebase/firestore";
+import { useState, useRef, useEffect } from "react";
+import { useFetch } from "../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
 
 // styles
 import "./Create.css";
@@ -14,20 +12,17 @@ export default function Create() {
   const [newIngredient, setNewIngredient] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const ingredientInput = useRef(null);
-  const { user } = useAuthContext();
 
+  const { postData, data } = useFetch("http://localhost:3000/recipes", "POST");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    await addDoc(collection(db, "recipes"), {
+    postData({
       title,
-      method,
-      cookingTime,
-      newIngredient,
       ingredients,
-      uid: user.uid,
+      method,
+      cookingTime: cookingTime + " minutes",
     });
   };
 
@@ -43,6 +38,11 @@ export default function Create() {
   };
 
   // redirect the user when we get data response
+  useEffect(() => {
+    if (data) {
+      navigate("/");
+    }
+  }, [data, navigate]);
 
   return (
     <div className="create">
@@ -98,7 +98,7 @@ export default function Create() {
           />
         </label>
 
-        <button className="submit-buttons">submit</button>
+        <button className="btn">submit</button>
       </form>
     </div>
   );

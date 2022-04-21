@@ -1,18 +1,17 @@
-import RecipeList from "../../components/RecipeList";
-import { useCollection } from "../../hooks/useCollection";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useFetch } from '../../hooks/useFetch'
+import RecipeList from '../../components/RecipeList'
+
 // styles
-import "./Home.css";
+import './Home.css'
 
 export default function Home() {
-  const { user } = useAuthContext();
-  const { documents: recipes } = useCollection("recipes", [
-    "uid",
-    "==",
-    user.uid,
-  ]);
+  const { data, isPending, error } = useFetch('http://localhost:3000/recipes')
 
   return (
-    <div className="home">{recipes && <RecipeList recipes={recipes} />}</div>
-  );
+    <div className="home">
+      {error && <p className="error">{error}</p>}
+      {isPending && <p className="loading">Loading...</p>}
+      {data && <RecipeList recipes={data} />}
+    </div>
+  )
 }
